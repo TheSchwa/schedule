@@ -717,7 +717,7 @@ def writehtml(table,opts,fname):
     lines = tag('table',tab(html_gettable(table)))
   else:
     lines = tag('html',tab(html_gethtml(table,opts)))
-  qf.writelines(lines,fname)
+  qf.writelinesn(lines,fname)
 
 def html_gethtml(table,opts):
   """return the content of the <html></html> tags"""
