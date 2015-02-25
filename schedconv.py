@@ -709,10 +709,14 @@ def writehtml(table,opts,fname):
               'border-color':'#000000',
               'event-cell-font-color':'#000000',
               'event-cell-bg-color':'#FFFFFF',
-              'header-font-color':'#000000'})
+              'header-font-color':'#000000',
+              'table-only':'False'})
   
   opts = util.fillargs(opts,default)
-  lines = tag('html',tab(html_gethtml(table,opts)))
+  if opts['table-only'].lower()=='true':
+    lines = tag('table',tab(html_gettable(table)))
+  else:
+    lines = tag('html',tab(html_gethtml(table,opts)))
   qf.writelines(lines,fname)
 
 def html_gethtml(table,opts):
