@@ -710,6 +710,7 @@ def writehtml(table,opts,fname):
               'event-cell-font-color':'#000000',
               'event-cell-bg-color':'#FFFFFF',
               'header-font-color':'#000000',
+              'border-collapse':'True',
               'table-only':'False'})
   
   opts = util.fillargs(opts,default)
@@ -739,8 +740,9 @@ def html_getstyle(table,opts):
   lines = css('body',{
       'background':opts['page-bg-color'],
       'font-family':opts['font-family']})
-  lines += css('table',{
-      'border-collapse':'collapse'})
+  if opts['border-collapse']=='True':
+    lines += css('table',{
+        'border-collapse':'collapse'})
   lines += css('td',{
       'background':opts['empty-cell-bg-color'],
       'border':'solid 3px '+opts['border-color'],
