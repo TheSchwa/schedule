@@ -187,9 +187,9 @@ def parserowan(htmlfile):
   
   lines = qf.readlinesbs(htmlfile)
   (tablestart,_) = util.findinlist('Display course details for a student',lines)
-  (tablestop,_) = util.findinlist('</table>',lines,tablestart+1)
-  starts = util.findallinlist('<tr>',lines,tablestart+1,tablestop)
-  stops = util.findallinlist('</tr>',lines,tablestart+1,tablestop)
+  (tablestop,_) = util.findinlist('</table>',lines,tablestart+1,ignorecase=True)
+  starts = util.findallinlist('<tr>',lines,tablestart+1,tablestop,ignorecase=True)
+  stops = util.findallinlist('</tr>',lines,tablestart+1,tablestop,ignorecase=True)
   
   # Ignore first (table headers) and last (total credits) <tr></tr>
   starts = [x[0] for x in starts[1:-1]]
