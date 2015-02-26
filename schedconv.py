@@ -211,7 +211,7 @@ def parserowan(htmlfile):
     info = {}
     for i in range(EVENT_COLS,len(COLUMNS)):
       l = lines[start+1+i]
-      info[COLUMNS[i]] = innerhtml(l).strip()
+      info[COLUMNS[i]] = mostinnerhtml(l).strip()
     
     # Check for fake classes (i.e. Honors Participation)
     try:
@@ -229,6 +229,27 @@ def parserowan(htmlfile):
       sched.events[matches[0]].addmeet(meets)
       
   return sched
+
+def istagged(l):
+  """return whether all of l is in an html tag"""
+  
+  l = l.strip()
+  try:
+    openleft = l.find('<')
+    openright = l.find('>')
+    closeleft = l.rfind('</')
+    closeright = l.rfind('>')
+  except:
+    return False
+  return ((openleft==0) and (closeright==len(l)-1) and (openleft<openright)
+      and (openright<closeleft) and (closeleft<closeright))
+
+def mostinnerhtml(l):
+  """return the innerhtml of all the tags in l"""
+  
+  while istagged(l):
+    l = innerhtml(l).strip()
+  return l
 
 def innerhtml(l):
   """return the innerhtml of the outtermost tag in l"""
@@ -648,7 +669,11 @@ def gettitlestr(meet):
               ['TECHNOLOGY','TECH'],
               ['STATISTICS','STAT'],
               ['DIGITAL','DIG'],
-              ['READINGS IN','READ']])
+              ['READINGS IN','READ'],
+              ['FRESHMAN','FRESH'],
+              ['SOPHOMOE','SOPH'],
+              ['JUNIOR','JUN'],
+              ['SENIO','SEN']])
   for pair in replace:
     title = title.replace(pair[0],pair[1])
   
