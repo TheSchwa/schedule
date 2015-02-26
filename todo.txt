@@ -1,21 +1,32 @@
-change most asserts to regular exceptions
-code overlap in html
-add rainbow background option
+------------------------------------------------------------------------
+a line or 2 in one function
+------------------------------------------------------------------------
 change type from "Class" to "Rowan"
+make a note at top of schedconv.py it requires schwa-lib
+make a note somewhere that TBA classes are ignored
+add comments to rowspan cells
 make rowan.html optional
-improve layout logic to take end time into account
-fix default value for empty-cell-bg-color in config files
 generate sched.conf if not already present
 split off parsing from try statements in convert()
-make a note somewhere that TBA classes are ignored
-make a note at top of schedconv.py it requires schwa-lib
-add comments to rowspan cells
-implement date chacking in layout()
-decide on what to do about times outside 8A-12A
+fix default value for empty-cell-bg-color in config files
+
+------------------------------------------------------------------------
+several lines in several functions
+------------------------------------------------------------------------
+change most asserts to regular exceptions
+improve layout logic to take end time into account
+add custom css to config
 implement cron job on grandline
 implement schedule index on grandline
-add tutorials and docs to grandline
-add custom css to config
+
+------------------------------------------------------------------------
+new functionality, many lines
+------------------------------------------------------------------------
+add rainbow background option
+decide on what to do about times outside 8A-12A
+add config writer to add a Schedule to a sched.conf
+implement full 5-minute resolution table in html
+implement overlap html
 add comments all over the place
 add README to git
-add config writer to add a Schedule to a sched.conf
+add tutorials and docs to grandline
