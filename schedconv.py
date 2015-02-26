@@ -639,7 +639,8 @@ def gettitlestr(meet):
               ['TECHNOLOGIES','TECH'],
               ['TECHNOLOGY','TECH'],
               ['STATISTICS','STAT'],
-              ['DIGITAL','DIG']])
+              ['DIGITAL','DIG'],
+              ['READINGS IN','READ']])
   for pair in replace:
     title = title.replace(pair[0],pair[1])
   
