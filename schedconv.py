@@ -21,44 +21,50 @@ import schedule,event,meeting
 COLUMNS = (['CRN','Course','Title','Campus','Credits','Level',
             'Start Date','End Date','Day','Time','Location','Instructor'])
 EVENT_COLS = 6
+ROWAN_FILE = '~/rowan.html'
+CONFIG_FILE = '~/sched.conf'
+ASCII_FILE = '~/sched-ascii.txt'
+HTML_FILE = '~/public_html/sched.html'
 
 def convert():
-  """parse rowan and config to generate ascii and html"""
+  """parse config and rowan to generate ascii and html"""
   
-  try:
-    rowanfile = os.path.expanduser('~/rowan.html')
-    s = parserowan(rowanfile)
-  except IOError:
-    print 'Could not find rowan concise schedule file "~/rowan.html"'
-    sys.exit(0)
+  configfile = os.path.expanduser(CONFIG_FILE)
+  rowanfile = os.path.expanduser(ROWAN_FILE)
+  asciifile = os.path.expanduser(ASCII_FILE)
+  htmlfile = os.path.expanduser(HTML_FILE)
   
-  try:
-    configfile = os.path.expanduser('~/sched.conf')
-    s2 = parseconfig(configfile)
-  except IOError:
-    print 'Could not find schedule config file "~/sched.conf"'
-    sys.exit(0)
+  if not os.path.isfile(configfile):
+    writedefaultconfig(configfile)
+    print 'Generated default config file "'+CONFIG_FILE+'"'
+  s = parseconfig(configfile)
   
-  s.addevents(s2.getevents())
+  if os.path.isfile(rowanfile):
+    s2 = parserowan(rowanfile)
+    s.addevents(s2.getevents())
+  
   (t,b) = getlayout(s)
   
   try:
-    asciifile = os.path.expanduser('~/sched-ascii.txt')
     writeascii(t,b,asciifile)
   except IOError:
-    print 'Could not write to ascii file "~/sched-ascii.txt"'
+    print 'Could not write to ascii file "'+ASCII_FILE+'"'
     sys.exit(0)
   
   opts = parsehtmlconfig(configfile)
   
   try:
-    htmlfile = os.path.expanduser('~/public_html/sched.html')
     writehtml(t,opts,htmlfile)
   except IOError:
-    print 'Could not write to html file "~/public_html/sched.html"'
+    print 'Could not write to html file "'+HTML_FILE+'"'
     sys.exit(0)
   
-  print 'Success making "~/sched-ascii.txt" and "~/public_html/sched.html"'
+  print 'Success making "'+ASCII_FILE+'" and "'+HTML_FILE+'"'
+
+def writedefaultconfig(configfile):
+  """write the default config to configfile"""
+  
+  raise NotImplementedError
 
 def parsehtml(htmlfile):
   """read the data from a schedconv webpage into a Schedule object"""

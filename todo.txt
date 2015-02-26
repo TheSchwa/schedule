@@ -1,9 +1,7 @@
 ------------------------------------------------------------------------
 a line or 2 in one function
 ------------------------------------------------------------------------
-make rowan.html optional
 generate sched.conf if not already present
-split off parsing from try statements in convert()
 fix default value for empty-cell-bg-color in config files
 
 ------------------------------------------------------------------------
