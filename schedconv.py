@@ -646,7 +646,7 @@ def gettitlestr(meet):
   
   title = meet.event.getinfo('Title').upper()
   
-  delete = ['SOC SCI:','LITERATURE:','SEMINAR: ','ST:']
+  delete = ['SOC SCI:','LITERATURE:','SEMINAR: ','ST:','ST ECE:']
   for d in delete:
     title = title.replace(d,'')
   
