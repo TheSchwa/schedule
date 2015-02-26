@@ -14,7 +14,7 @@ import sys,os.path
 
 import quickfile as qf
 import util
-from htmlwriter import tab,tag,tags,css,br,space
+from htmlwriter import tab,tag,tags,css,br,space,comment
 
 import schedule,event,meeting
 
@@ -173,7 +173,9 @@ def parseconfigtime(s):
 
 
 def parserowan(htmlfile):
-  """read the data from the rowan webpage into a Schedule object"""
+  """read the data from the rowan webpage into a Schedule object
+  Note that any classes with invalid dates or times (e.g. "TBD")
+  will be ignored and not added to the schedule"""
   
   sched = schedule.Schedule()
   
@@ -234,7 +236,7 @@ def parserowanevent(info):
   
   info['CRN'] = int(info['CRN'])
   info['Credits'] = float(info['Credits'])
-  info['Type'] = 'Class'
+  info['Type'] = 'Rowan'
   return event.Class(info)
 
 def parserowanmeet(info,eve):
@@ -812,9 +814,13 @@ def html_getrow(table,row):
           r = getmultimeetind(table,row,col)
           lines += [tags('td',html_getcell(table[r][col]),
               {'class':'full','rowspan':str(r-row+1)})]
+        else:
+          lines += comment(['placeholder due to rowspan'])
       else:
         if (row==0) or (table[row-1][col]!='MULTI'):
           lines += [tags('td',html_getcell(meet),{'class':'full'})]
+        else:
+          lines += comment(['placeholder due to rowspan'])
   return lines
 
 def html_getcell(meet):

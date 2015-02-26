@@ -1,10 +1,6 @@
 ------------------------------------------------------------------------
 a line or 2 in one function
 ------------------------------------------------------------------------
-change type from "Class" to "Rowan"
-make a note at top of schedconv.py it requires schwa-lib
-make a note somewhere that TBA classes are ignored
-add comments to rowspan cells
 make rowan.html optional
 generate sched.conf if not already present
 split off parsing from try statements in convert()
@@ -28,5 +24,5 @@ add config writer to add a Schedule to a sched.conf
 implement full 5-minute resolution table in html
 implement overlap html
 add comments all over the place
-add README to git
+add README to git (mention requires schwa-lib)
 add tutorials and docs to grandline
