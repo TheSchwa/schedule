@@ -204,14 +204,14 @@ def parserowan(htmlfile):
       if '&nbsp;' in l:
         info = sched.events[-1].getinfo()
         break
-      info[COLUMNS[i]] = innerhtml(l).strip()
+      info[COLUMNS[i]] = innermosthtml(l).strip()
     eve = parserowanevent(info)
     
     # Build meeting.Meeting info
     info = {}
     for i in range(EVENT_COLS,len(COLUMNS)):
       l = lines[start+1+i]
-      info[COLUMNS[i]] = mostinnerhtml(l).strip()
+      info[COLUMNS[i]] = innermosthtml(l).strip()
     
     # Check for fake classes (i.e. Honors Participation)
     try:
@@ -244,7 +244,7 @@ def istagged(l):
   return ((openleft==0) and (closeright==len(l)-1) and (openleft<openright)
       and (openright<closeleft) and (closeleft<closeright))
 
-def mostinnerhtml(l):
+def innermosthtml(l):
   """return the innerhtml of all the tags in l"""
   
   while istagged(l):
@@ -255,7 +255,7 @@ def innerhtml(l):
   """return the innerhtml of the outtermost tag in l"""
   
   openstop = l.find('>')
-  closestart = l.find('</',openstop)
+  closestart = l.rfind('</')
   return l[openstop+1:closestart]
 
 def parserowanevent(info):
