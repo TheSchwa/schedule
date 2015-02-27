@@ -2,7 +2,6 @@
 a line or 2 in one function
 ------------------------------------------------------------------------
 generate sched.conf if not already present
-fix default value for empty-cell-bg-color in config files
 
 ------------------------------------------------------------------------
 several lines in several functions
