@@ -388,7 +388,7 @@ def getdurind(meet):
   sec = dur.seconds
   hr = int(sec/60/60)
   mi = int((sec-60*60*hr)/60)
-  dur = int(((hr+1.0*(mi-0.5)/60)+1)/2)
+  dur = int(((hr+1.0*mi/60)+1)/2)
   if dur<1:
     return 1
   if dur>8:
