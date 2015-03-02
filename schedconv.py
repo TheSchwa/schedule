@@ -379,7 +379,10 @@ def getstartind(meet):
   t = meet.getinfo('Start Time')
   hr = t.hour
   mi = t.minute
-  return int(((hr+1.0*mi/60)-8)/2)
+  start = int(((hr+1.0*mi/60)-8)/2)
+  if start<0:
+    return 0
+  return start
 
 def getdurind(meet):
   """return the length of this meet in matrix indices"""
