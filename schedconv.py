@@ -332,7 +332,7 @@ def getlayout(s):
   days = meeting.DAYS
   for d in range(0,7):
     meets = s.getmeets(search={'Day':days[d]})
-    print days[d]
+
     # If there are more than 8 meets, they won't fit, throw an error
     if len(meets)>8:
       raise RuntimeError('Too many meets on '+days[d]+' to layout')
