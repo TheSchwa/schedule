@@ -343,21 +343,21 @@ def getlayout(s):
       # Set based on start time or in next available slot if occupied
       # also take into account duration for spanning multiple cells
       # the last cell of the multi is the meeting, previous are 'MULTI'
-      pref = getstartind(meet)
-      dur = getdurind(meet)
+      pref = getstartind(meet,'Start Time')
       start = getavailind(table,d,pref)
+      end = getstartind(meet,'End Time')-1
       
-      # Reduce the dur if it doesn't fit
-      while (dur>1) and (not isvalid(table,d,start,dur)):
-        dur -= 1
+      # Reduce the end if it doesn't fit
+      while (end-start>0) and (not isvalid(table,d,start,end)):
+        end -= 1
       
       # If out of spaces move meets earlier or condense MULTI meets
-      if not isvalid(table,d,start,dur):
+      if not isvalid(table,d,start,end):
         table = freespaceup(table,d,8)
         start = getavailind(table,d,pref)
       
-      # If there are 8 or fewer meets on this day, layout must work
-      assert isvalid(table,d,start,dur), 'Failed to layout a day with 8 or fewer meets'
+      # If there are 8 or fewer meets on this day, layout must have succeeded
+      assert isvalid(table,d,start,end), 'Failed to layout a day with 8 or fewer meets'
       
       # Move previous same events later if necessary and possible and
       # move current event later if necessary and possible
@@ -366,17 +366,17 @@ def getlayout(s):
       table = sync(table,meet)
       
       # Set meet and 'MULTI' in table
-      for row in range(start,start+dur-1):
+      for row in range(start,end):
         table[row][d] = 'MULTI'
-      table[start+dur-1][d] = meet
+      table[end][d] = meet
       
   borders = getborders(table)
   return (table,borders)
 
-def getstartind(meet):
+def getstartind(meet,info):
   """return the index in the matrix best matching the start time"""
   
-  t = meet.getinfo('Start Time')
+  t = meet.getinfo(info)
   hr = t.hour
   mi = t.minute
   start = int(((hr+1.0*mi/60)-8)/2)
@@ -405,15 +405,15 @@ def getavailind(matrix,col,pref):
     pref += 1
   return pref
 
-def isvalid(matrix,col,start,dur):
+def isvalid(matrix,col,start,end):
   """return True if given layout is valid, False otherwise"""
   
-  # Start and duration must be within table
-  if (start>7) or (start+dur-1>7) or (start<0) or (dur<1) or (dur>8):
+  # Start and end must be within table and end must be after start
+  if (start>7) or (end>7) or (start<0) or (end-start<0) or (end-start>7):
     return False
   
   # Conflicts are invalid
-  for r in range(start,start+dur):
+  for r in range(start,end+1):
     if matrix[r][col] is not None:
       return False
       
