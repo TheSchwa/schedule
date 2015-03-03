@@ -332,6 +332,9 @@ def getlayout(s):
   days = meeting.DAYS
   for d in range(0,7):
     meets = s.getmeets(search={'Day':days[d]})
+    
+    # Only layout meets that haven't ended yet
+    meets = [m for m in meets if m.getinfo('End Date')>=dt.date.today()]
 
     # If there are more than 8 meets, they won't fit, throw an error
     if len(meets)>8:
