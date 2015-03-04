@@ -360,8 +360,12 @@ def getlayout(s):
       pref = getstartind(meet,'Start Time')
       start = getavailind(table,d,pref)
       end = getstartind(meet,'End Time')-1
+      if ((meet.getinfo('End Time').hour<8)
+          and (meet.getinfo('Start Time')>meet.getinfo('End Time'))):
+        end = 7
       if end<start:
         end = start
+      
       # Reduce the end if it doesn't fit
       while (end-start>0) and (not isvalid(table,d,start,end)):
         end -= 1
