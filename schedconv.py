@@ -331,10 +331,18 @@ def getlayout(s):
   
   days = meeting.DAYS
   for d in range(0,7):
-    meets = s.getmeets(search={'Day':days[d]})
+    allmeets = s.getmeets(search={'Day':days[d]})
     
-    # Only layout meets that haven't ended yet
-    meets = [m for m in meets if m.getinfo('End Date')>=dt.date.today()]
+    # Only layout meets that are active based on dates
+    meets = []
+    today = dt.date.today()
+    weekday = today.isoweekday()%7   # 0 is Sunday, 6 is Saturday
+    weekstart = today-dt.timedelta(days=weekday)
+    weekend = weekstart+dt.timedelta(days=6)
+    
+    for m in allmeets:
+      if (m.getfirstmeet()<=weekend) and (m.getlastmeet()>=weekstart):
+        meets.append(m)
 
     # If there are more than 8 meets, they won't fit, throw an error
     if len(meets)>8:

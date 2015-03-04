@@ -117,6 +117,28 @@ class Meeting:
         meets += 1
     return meets
 
+  def getfirstmeet(self):
+    """return the first date this meeting will occur"""
+    
+    startdate = self.info['Start Date']
+    startday = startdate.isoweekday()%7
+    weekday = DAYS.index(self.info['Day'])
+    startdate = startdate+dt.timedelta(weekday-startday)
+    if weekday<startday:
+      return startdate+dt.timedelta(days=7)
+    return startdate
+
+  def getlastmeet(self):
+    """return the last date this meting will occur"""
+    
+    enddate = self.info['End Date']
+    endday = enddate.isoweekday()%7
+    weekday = DAYS.index(self.info['Day'])
+    enddate = enddate+dt.timedelta(weekday-endday)
+    if weekday>endday:
+      return enddate-dt.timedelta(days=7)
+    return enddate
+
 class ClassMeeting(Meeting):
   """ClassMeetings also have an instructor"""
   
