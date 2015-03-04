@@ -25,6 +25,7 @@ ROWAN_FILE = '~/rowan.html'
 CONFIG_FILE = '~/sched.conf'
 ASCII_FILE = '~/sched-ascii.txt'
 HTML_FILE = '~/public_html/sched.html'
+LOG_FILE = '~/sched.log'
 
 def convert():
   """parse config and rowan to generate ascii and html"""
@@ -323,8 +324,10 @@ def parserowantime(s):
 def getlayout(s):
   """decide where to put entries in the schedule"""
   
-  if len(s.getconflicts())>0:
-    raise RuntimeError('Cannot layout a schedule with conflicts')
+  conflicts = s.getconflicts()
+  if len(conflicts)>0:
+    writeconflicts(conflicts)
+    raise RuntimeError('Cannot layout a schedule with conflicts; see ~/sched.log')
   
   # Create blank sched matrix
   table = util.matrix(8,7,None)
@@ -882,6 +885,21 @@ def writeoverlap(title,users):
   a dict with keys of 'username' and values of {'name':'','color':''}"""
   
   raise NotImplementedError
+
+def writeconflicts(conflicts):
+  """write the conflicts to the log file"""
+  
+  count = 1
+  lines = []
+  days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+  for (m1,m2) in conflicts:
+    d = meeting.DAYS.index(m1.getinfo('Day'))
+    lines += ['===== Conflict '+str(count)+' - '+days[d]+' =====','']
+    lines += [gettimestr(m1)+' '+m1.event.getinfo('Title')]
+    lines += [gettimestr(m2)+' '+m2.event.getinfo('Title'),'']
+  
+  logfile = os.path.expanduser(LOG_FILE)
+  qf.writelinesn(lines,logfile)
 
 if __name__ == '__main__':
   convert()
