@@ -227,7 +227,7 @@ def parserowan(htmlfile):
       eve.addmeets(meets)
       sched.addevent(eve)
     else:
-      sched.events[matches[0]].addmeet(meets)
+      sched.events[matches[0]].addmeets(meets)
       
   return sched
 
