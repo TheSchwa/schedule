@@ -45,22 +45,25 @@ def convert():
     s.addevents(s2.getevents())
   
   (t,b) = getlayout(s)
-  
+
   try:
     writeascii(t,b,asciifile)
   except IOError:
     print 'Could not write to ascii file "'+ASCII_FILE+'"'
     sys.exit(0)
+  msg = 'Success making "'+ASCII_FILE
   
   opts = parsehtmlconfig(configfile)
   
-  try:
-    writehtml(t,opts,htmlfile)
-  except IOError:
-    print 'Could not write to html file "'+HTML_FILE+'"'
-    sys.exit(0)
+  if opts.has_key('write-html') and opts['write-html'].lower()=='true':
+    try:
+      writehtml(t,opts,htmlfile)
+    except IOError:
+      print 'Could not write to html file "'+HTML_FILE+'"'
+      sys.exit(0)
+    msg += ('" and "'+HTML_FILE+'"')
   
-  print 'Success making "'+ASCII_FILE+'" and "'+HTML_FILE+'"'
+  print msg
 
 def writedefaultconfig(configfile):
   """write the default config to configfile"""
@@ -758,7 +761,8 @@ def parsehtmlconfig(configfile):
 def writehtml(table,opts,fname):
   """write the schedule to an html file using CSS opts"""
   
-  default = ({'title':'Schedule',
+  default = ({'write-html':'False',
+              'title':'Schedule',
               'page-bg-color':'#FFFFFF',
               'font-family':'Verdana',
               'empty-cell-bg-color':'#808080',
