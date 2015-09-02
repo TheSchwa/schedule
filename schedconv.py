@@ -493,14 +493,14 @@ def sync(matrix,meet):
         while (r1>r2) and (new is not None):
           new = freespacedown(matrix,c2,r2)
           if new is not None:
-            matrix[r2+1][c2] = matrix(r2,c2)
+            matrix[r2+1][c2] = matrix[r2][c2]
             matrix[r2][c2] = None
         
         # Try to move m1 later
         while (r1<r2) and (new is not None):
           new = freespacedown(matrix,c1,r1)
           if new is not None:
-            matrix[r1+1][c1] = matrix(r1,c1)
+            matrix[r1+1][c1] = matrix[r1][c1]
             matrix[r1][c1] = None
   
   # Attempt to move corresponding meets earlier to sync
@@ -515,14 +515,14 @@ def sync(matrix,meet):
         while (r1>r2) and (new is not None):
           new = freespaceup(matrix,c1,r1)
           if new is not None:
-            matrix[r1-1][c1] = matrix(r1,c1)
+            matrix[r1-1][c1] = matrix[r1][c1]
             matrix[r1][c1] = None
         
         # Try to move m2 earlier
         while (r1<r2) and (new is not None):
           new = freespaceup(matrix,c2,r2)
           if new is not None:
-            matrix[r2-1][c2] = matrix(r2,c2)
+            matrix[r2-1][c2] = matrix[r2][c2]
             matrix[r2][c2] = None
   
   return matrix
