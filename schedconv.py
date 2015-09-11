@@ -381,16 +381,16 @@ def getlayout(s):
       # If there are 8 or fewer meets on this day, layout must have succeeded
       assert isvalid(table,d,start,end), 'Failed to layout a day with 8 or fewer meets'
       
+      # Set meet and 'MULTI' in table
+      for row in range(start,end):
+        table[row][d] = 'MULTI'
+      table[end][d] = meet
+      
       # Move previous same events later if necessary and possible and
       # move current event later if necessary and possible
       # Based on intuition that same events on different days but
       # at the same times should be in the same row in the schedule
       table = sync(table,meet)
-      
-      # Set meet and 'MULTI' in table
-      for row in range(start,end):
-        table[row][d] = 'MULTI'
-      table[end][d] = meet
       
   borders = getborders(table)
   return (table,borders)
@@ -473,20 +473,24 @@ def sync(matrix,meet):
   """try to keep all meets in the same row if they are for the same
   event at the same time (but on different days)"""
 
-  cells = []
+  meets = []
 
   for c in range(0,7):
     for r in range(0,8):
-      cell = matrix[r][c]
-      if issubclass(cell.__class__,meeting.Meeting) and (cell.event is meet.event):
-        cells.append((r,c))
+      m = matrix[r][c]
+      if issubclass(m.__class__,meeting.Meeting) and (m.event is meet.event):
+        meets.append(m)
   
   # Attempt to move corresponding meets later to sync
-  for (r1,c1) in cells:
-    for (r2,c2) in cells:
-      t1 = matrix[r1][c1].getinfo('Start Time')
-      t2 = matrix[r2][c2].getinfo('Start Time')
-      if (r1!=r2) and (c1!=c2) and (t1==t2):
+  for m1 in meets:
+    for m2 in meets:
+      
+      t1 = m1.getinfo('Start Time')
+      t2 = m2.getinfo('Start Time')
+      (r1,c1) = findinmatrix(matrix,m1)
+      (r2,c2) = findinmatrix(matrix,m2)
+      
+      if (r1!=r2) and (c1!=c2) and (t1==t2) and (m1!=m2):
         new = 'Some'
         
         # Try to move m2 later
@@ -495,6 +499,7 @@ def sync(matrix,meet):
           if new is not None:
             matrix[r2+1][c2] = matrix[r2][c2]
             matrix[r2][c2] = None
+            r2 += 1
         
         # Try to move m1 later
         while (r1<r2) and (new is not None):
@@ -502,13 +507,18 @@ def sync(matrix,meet):
           if new is not None:
             matrix[r1+1][c1] = matrix[r1][c1]
             matrix[r1][c1] = None
+            r1 += 1
   
   # Attempt to move corresponding meets earlier to sync
-  for (r1,c1) in cells:
-    for (r2,c2) in cells:
-      t1 = matrix[r1][c1].getinfo('Start Time')
-      t2 = matrix[r2][c2].getinfo('Start Time')
-      if (r1!=r2) and (c1!=c2) and (t1==t2):
+  for m1 in meets:
+    for m2 in meets:
+      
+      t1 = m1.getinfo('Start Time')
+      t2 = m2.getinfo('Start Time')
+      (r1,c1) = findinmatrix(matrix,m1)
+      (r2,c2) = findinmatrix(matrix,m2)
+      
+      if (r1!=r2) and (c1!=c2) and (t1==t2) and (m1!=m2):
         new = 'Some'
         
         # Try to move m1 earlier
@@ -517,6 +527,7 @@ def sync(matrix,meet):
           if new is not None:
             matrix[r1-1][c1] = matrix[r1][c1]
             matrix[r1][c1] = None
+            r1 -= 1
         
         # Try to move m2 earlier
         while (r1<r2) and (new is not None):
@@ -524,8 +535,27 @@ def sync(matrix,meet):
           if new is not None:
             matrix[r2-1][c2] = matrix[r2][c2]
             matrix[r2][c2] = None
+            r2 -= 1
   
   return matrix
+
+def findinmatrix(matrix,meet):
+  """find the indices of the given meet in the matrix; return the
+  first (highest) row for MULTI meets """
+  
+  for r in range(0,8):
+    for c in range(0,7):
+      if matrix[r][c]==meet:
+        return (getmultistart(matrix,r,c),c)
+  return None
+
+def getmultistart(matrix,row,col):
+  """return the indices of the first MULTI of a MULTI meet, or return
+  the given (row,col) if this is not a MULTI meet"""
+  
+  while (row>0) and (matrix[row-1][col]=='MULTI'):
+    row -= 1
+  return row
 
 def moveup(matrix,col,row):
   """move events before row sooner in column col if possible, otherwise
