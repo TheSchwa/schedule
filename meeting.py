@@ -88,8 +88,8 @@ class Meeting:
       return False
     
     # If times do not overlap, no conflict
-    if (self.info['End Time']<other.info['Start Time'] or
-        self.info['Start Time']>other.info['End Time']):
+    if (self.info['End Time']<=other.info['Start Time'] or
+        self.info['Start Time']>=other.info['End Time']):
       return False
     
     return True
